@@ -1,0 +1,20 @@
+name: 'ClamAV Scanning'
+description: 'Dockerized ClamAV Scanner'
+
+inputs:
+  directory:
+    description: 'Directory for scanning'
+    required: true
+    default: '.'
+  options:
+      description: 'Flags for scanner'
+      required: false
+      default: '-ri'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run scanning
+      run: |
+        # docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir --mount type=bind,source=./clamav.log,target=./clamav.log -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan -ir /scandir --log=clamav.log; echo $? 
+        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan ${{ inputs.options }} /scandir; exit $? 
