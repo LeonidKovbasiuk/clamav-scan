@@ -71,4 +71,4 @@ runs:
     - name: Run scanning
       shell: bash
       run: |
-        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan "$SCANNERS_ARGS}" /scandir; exit $? 
+        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan "${{ env.SCANNERS_ARGS }}" /scandir; exit $? 
