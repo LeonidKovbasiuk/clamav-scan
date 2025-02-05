@@ -16,6 +16,7 @@ inputs:
   no-summary:
       description: 'Do not display summary at the end of scanning'
       required: false
+      default: false
   infected:
       description: 'Only print infected files'
       required: false
