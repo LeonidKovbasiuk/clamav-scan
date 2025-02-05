@@ -56,16 +56,16 @@ runs:
         }
         
         SCANNERS_ARGS=''
-        add_flag_if_defined ${{ inputs.logfile }} "-l ${{ inputs.logfile }}" ""
-        add_flag_if_defined ${{ inputs.recursive }} "-r" "false"
-        add_flag_if_defined ${{ inputs.no-summary }} "--no-summary" "false"
-        add_flag_if_defined ${{ inputs.infected }} "-i" "false"
-        add_flag_if_defined ${{ inputs.detect-pua }} "--detect-pua=yes" "false"
-        add_flag_if_defined ${{ inputs.max-files }} "--max-files=${{ inputs.max-files }}" "10000"
-        add_flag_if_defined ${{ inputs.max-filesize }} "--max-filesize=${{ inputs.max-filesize }}" "25M"
-        add_flag_if_defined ${{ inputs.max-scansize }} "--max-scansize=${{ inputs.max-scansize }}" "100M"
-        add_flag_if_defined ${{ inputs.max-recursion }} "--max-recursion=${{ inputs.max-recursion }}" "16"
-        add_flag_if_defined ${{ inputs.max-dir-recursion }} "--max-dir-recursion=${{ inputs.max-dir-recursion }}" "15"
+        add_flag_if_defined "${{ inputs.logfile }}" "-l ${{ inputs.logfile }}" ""
+        add_flag_if_defined "${{ inputs.recursive }}" "-r" "false"
+        add_flag_if_defined "${{ inputs.no-summary }}" "--no-summary" "false"
+        add_flag_if_defined "${{ inputs.infected }}" "-i" "false"
+        add_flag_if_defined "${{ inputs.detect-pua }}" "--detect-pua=yes" "false"
+        add_flag_if_defined "${{ inputs.max-files }}" "--max-files=${{ inputs.max-files }}" "10000"
+        add_flag_if_defined "${{ inputs.max-filesize }}" "--max-filesize=${{ inputs.max-filesize }}" "25M"
+        add_flag_if_defined "${{ inputs.max-scansize }}" "--max-scansize=${{ inputs.max-scansize }}" "100M"
+        add_flag_if_defined "${{ inputs.max-recursion }}" "--max-recursion=${{ inputs.max-recursion }}" "16"
+        add_flag_if_defined "${{ inputs.max-dir-recursion }}" "--max-dir-recursion=${{ inputs.max-dir-recursion }}" "15"
       echo "$SCANNERS_ARGS"
              
     - name: Run scanning
