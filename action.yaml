@@ -50,7 +50,7 @@ runs:
         add_flag_if_defined() {
           local input_value="$1"
           local flag_with_value="$2"
-          local defalut_value=$3
+          local default_value=$3
           if [ ! -z "$input_value" ] && [ "$input_value" != "$default_value" ] ; then
             SCANNERS_ARGS="${SCANNERS_ARGS} $flag_with_value"
           fi
