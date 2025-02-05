@@ -66,7 +66,7 @@ runs:
         add_flag_if_defined "${{ inputs.max-scansize }}" "--max-scansize=${{ inputs.max-scansize }}" "100M"
         add_flag_if_defined "${{ inputs.max-recursion }}" "--max-recursion=${{ inputs.max-recursion }}" "16"
         add_flag_if_defined "${{ inputs.max-dir-recursion }}" "--max-dir-recursion=${{ inputs.max-dir-recursion }}" "15"
-      echo "$SCANNERS_ARGS"
+        echo "$SCANNERS_ARGS"
              
     - name: Run scanning
       shell: bash
