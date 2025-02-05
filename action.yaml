@@ -15,6 +15,7 @@ runs:
   using: 'composite'
   steps:
     - name: Run scanning
+      shell: bash
       run: |
         # docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir --mount type=bind,source=./clamav.log,target=./clamav.log -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan -ir /scandir --log=clamav.log; echo $? 
         docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan ${{ inputs.options }} /scandir; exit $? 
