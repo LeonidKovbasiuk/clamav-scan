@@ -6,16 +6,69 @@ inputs:
     description: 'Directory for scanning'
     required: true
     default: '.'
-  options:
-      description: 'Flags for scanner'
+  logfile:
+      description: 'Save scan report to file'
       required: false
-      default: '-ri'
+  recursive:
+      description: 'Scan directories recursively'
+      required: false
+      default: true
+  no-summary:
+      description: 'Do not display summary at the end of scanning'
+      required: false
+  infected:
+      description: 'Only print infected files'
+      required: false
+      default: true
+  detect-pua:
+      description: 'Detect Possibly Unwanted Applications'
+      required: false
+      default: true
+  max-files:
+      description: 'Extract at most #n files from each scanned file (default: 10000)'
+      required: false
+  max-filesize:
+      description: 'Extract and scan at most #n kilobytes from each archive. You may pass the value in megabytes in format xM or xm, where x is a number (default: 25 MB, max: <4 GB)'
+      required: false
+  max-scansize:
+      description: 'Extract and scan at most #n kilobytes from each scanned file. You may pass the value in megabytes in format xM or xm, where x is a number (default: 100 MB, max: <4 GB)'
+      required: false
+  max-recursion:
+      description: 'Set archive recursion level limit (default: 16)'
+      required: false
+  max-dir-recursion:
+      description: 'Maximum depth directories are scanned at (default: 15)'
+      required: false
 
 runs:
   using: 'composite'
   steps:
+    - name: Build arguments for scanners
+      shell: bash
+      run: |
+        add_flag_if_defined() {
+          local input_value="$1"
+          local flag_with_value="$2"
+          local defalut_value=$3
+          if [ ! -z "$input_value" ] && [ "$input_value" != "$default_value" ] ; then
+            SCANNERS_ARGS="${SCANNERS_ARGS} $flag_with_value"
+          fi
+        }
+        
+        SCANNERS_ARGS=''
+        add_flag_if_defined ${{ inputs.logfile }} "-l ${{ inputs.logfile }}" ""
+        add_flag_if_defined ${{ inputs.recursive }} "-r" "false"
+        add_flag_if_defined ${{ inputs.no-summary }} "--no-summary" "false"
+        add_flag_if_defined ${{ inputs.infected }} "-i" "false"
+        add_flag_if_defined ${{ inputs.detect-pua }} "--detect-pua=yes" "false"
+        add_flag_if_defined ${{ inputs.max-files }} "--max-files=${{ inputs.max-files }}" "10000"
+        add_flag_if_defined ${{ inputs.max-filesize }} "--max-filesize=${{ inputs.max-filesize }}" "25M"
+        add_flag_if_defined ${{ inputs.max-scansize }} "--max-scansize=${{ inputs.max-scansize }}" "100M"
+        add_flag_if_defined ${{ inputs.max-recursion }} "--max-recursion=${{ inputs.max-recursion }}" "16"
+        add_flag_if_defined ${{ inputs.max-dir-recursion }} "--max-dir-recursion=${{ inputs.max-dir-recursion }}" "15"
+      echo "$SCANNERS_ARGS"
+             
     - name: Run scanning
       shell: bash
       run: |
-        # docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir --mount type=bind,source=./clamav.log,target=./clamav.log -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan -ir /scandir --log=clamav.log; echo $? 
-        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan ${{ inputs.options }} /scandir; exit $? 
+        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan $SCANNERS_ARGS /scandir; exit $? 
