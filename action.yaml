@@ -66,9 +66,9 @@ runs:
         add_flag_if_defined "${{ inputs.max-scansize }}" "--max-scansize=${{ inputs.max-scansize }}" "100M"
         add_flag_if_defined "${{ inputs.max-recursion }}" "--max-recursion=${{ inputs.max-recursion }}" "16"
         add_flag_if_defined "${{ inputs.max-dir-recursion }}" "--max-dir-recursion=${{ inputs.max-dir-recursion }}" "15"
-        echo "$SCANNERS_ARGS"
+        echo "SCANNERS_ARGS=$SCANNERS_ARGS" >> $GITHUB_ENV
              
     - name: Run scanning
       shell: bash
       run: |
-        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan $SCANNERS_ARGS /scandir; exit $? 
+        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan "$SCANNERS_ARGS}" /scandir; exit $? 
