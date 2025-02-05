@@ -56,7 +56,7 @@ runs:
         }
         
         SCANNERS_ARGS=''
-        add_flag_if_defined "${{ inputs.logfile }}" "-l ${{ inputs.logfile }}" ""
+        add_flag_if_defined "${{ inputs.logfile }}" "-l /scandir/${{ inputs.logfile }}" ""
         add_flag_if_defined "${{ inputs.recursive }}" "-r" "false"
         add_flag_if_defined "${{ inputs.no-summary }}" "--no-summary" "false"
         add_flag_if_defined "${{ inputs.infected }}" "-i" "false"
@@ -71,4 +71,5 @@ runs:
     - name: Run scanning
       shell: bash
       run: |
-        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan ${{ env.SCANNERS_ARGS }} /scandir; exit $? 
+        docker run --rm --mount type=bind,source=${{ inputs.directory}},target=/scandir -e CLAMAV_NO_CLAMD=true clamav/clamav:stable clamscan ${{ env.SCANNERS_ARGS }} /scandir
+        exit $? 
